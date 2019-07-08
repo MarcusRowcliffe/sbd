@@ -26,41 +26,36 @@ dsbweibull = function(x, lmean, lshape, log=FALSE){
   if(log==TRUE) log(res) else (res)
 }  
 
-sbm <- function(formula, data, pdf=c("lnorm", "gamma", "weibull")){
+sbm <- function(formula, data, pdf=c("lnorm", "gamma", "weibull"),
+                var.range=c(-4,4), trace=FALSE){
   dstrbn=match.arg(pdf)
   y <- model.response(model.frame(formula, data))
   lmn <- log(hmean(y)[1])
   lv <- switch(dstrbn,
                 lnorm = log(sd(log(y))),
                 gamma = log(exp(lmn)/var(y)),
-                weibull = 0
-  )
+                weibull = 0)
+  startpars <- switch(dstrbn,
+                      lnorm = list(lmean=lmn, lsig=lv),
+                      gamma = list(lmean=lmn, lrate=lv),
+                      weibull = list(lmean=lmn, lshape=lv))
+  lwr <- switch(dstrbn,
+                lnorm = c(lsig=var.range[1]),
+                gamma = c(lrate=var.range[1]),
+                weibull = c(lshape=var.range[1]))
+  upr <- switch(dstrbn,
+                lnorm = c(lsig=var.range[2]),
+                gamma = c(lrate=var.range[2]),
+                weibull = c(lshape=var.range[2]))
   f1 <- switch(dstrbn,
                lnorm = as.formula(paste(as.character(formula)[2], "~ dsblnorm(lmean, lsig)")),
                gamma = as.formula(paste(as.character(formula)[2], "~ dsbgamma(lmean, lrate)")),
                weibull = as.formula(paste(as.character(formula)[2], "~ dsbweibull(lmean, lshape)"))
-  )
+               )
   f2 <- as.formula(paste("lmean ~", as.character(formula)[3]))
-  model <- switch(dstrbn,
-                  lnorm = mle2(f1,
-                               start=list(lmean=lmn, lsig=lv),
-                               data=data,
-                               method="L-BFGS-B",
-                               lower=c(lsig=-5), upper=c(lsig=5),
-                               parameters=list(f2)),
-                  gamma = mle2(f1,
-                               start=list(lmean=-3, lrate=lv),
-                               data=data,
-                               method="L-BFGS-B",
-                               lower=c(lrate=-5), upper=c(lrate=5),
-                               parameters=list(f2)),
-                  weibull = mle2(f1,
-                                 start=list(lmean=lmn, lshape=lv),
-                                 data=data,
-                                 method="L-BFGS-B",
-                                 lower=c(lshape=-5), upper=c(lshape=5),
-                                 parameters=list(f2))
-  )
+  model <- mle2(f1, start=startpars, data=data, method="L-BFGS-B",
+                lower=lwr, upper=upr, parameters=list(f2), trace=trace)
+  
   res <- list(model=model, pdf=pdf, formula=formula)
   class(res) <- "sbm"
   res
