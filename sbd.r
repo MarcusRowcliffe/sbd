@@ -123,7 +123,8 @@ setClass("sbm", representation("list"))
 
 AIC.sbm <- function(obj) AIC(obj$model)
 
-plot.sbm <- function(obj, log=TRUE, lcol="red", ...){
+#...: if breaks given, passed to hist definition, otherwise passed to plot
+plot.sbm <- function(obj, log=TRUE, lpar=list(col="red"), add=FALSE, ...){
   if(length(attr(terms(obj$formula), "term.labels")) > 0)
     stop("Cannot plot covariate models")
 
@@ -153,6 +154,7 @@ plot.sbm <- function(obj, log=TRUE, lcol="red", ...){
   if(!("main" %in% argnames)) dots <- c(dots, main="")
   if(!("xlab" %in% argnames)) dots <- c(dots, xlab=xname)
   if(!("ylim" %in% argnames)) dots <- c(dots, list(ylim=c(0,max(c(den, h$density)))))
-  do.call(plot, dots)
-  if(log) lines(log(sq), den, col=lcol) else lines(sq, den, col=lcol)
+  if(!add) do.call(plot, dots)
+  if(log) sq <- log(sq)
+  do.call(lines, c(list(x=sq, y=den), lpar))
 }
