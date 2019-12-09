@@ -7,21 +7,30 @@ hmean <- function(x){
   c(mean=mn, se=se)
 }
 
-dsblnorm = function(x, lmean, lsig, log=FALSE){
+
+dlnorm(x, log(mn)-p2^2/2,p2) * x^2/mn 
+
+dlnorm(exp(lnx), log(cf[1])-cf[2]^2/2,cf[2]) * exp(lnx)^2/cf[1]
+
+  
+dsblnorm = function(x, lmean, lsig, log=FALSE, xlog=FALSE){
   lmean <- as.vector(lmean)
-  res <- dlnorm(x, lmean-exp(lsig)^2/2, exp(lsig)) * x / exp(lmean)
+  if(xlog==TRUE) xx <- x^2 else xx <- x
+  res <- dlnorm(x, lmean-exp(lsig)^2/2, exp(lsig)) * xx / exp(lmean)
   res[res==0] <- 5e-324
   if(log==TRUE) log(res) else (res)
 }  
-dsbgamma = function(x, lmean, lrate, log=FALSE){
+dsbgamma = function(x, lmean, lrate, log=FALSE, xlog=FALSE){
   lmean <- as.vector(lmean)
-  res <- dgamma(x, exp(lmean)*exp(lrate), exp(lrate)) * x / exp(lmean)
+  if(xlog==TRUE) xx <- x^2 else xx <- x
+  res <- dgamma(x, exp(lmean)*exp(lrate), exp(lrate)) * xx / exp(lmean)
   res[res==0] <- 5e-324
   if(log==TRUE) log(res) else (res)
 }  
-dsbweibull = function(x, lmean, lshape, log=FALSE){
+dsbweibull = function(x, lmean, lshape, log=FALSE, xlog=FALSE){
   lmean <- as.vector(lmean)
-  res <- dweibull(x, exp(lshape), exp(lmean)/gamma(1+1/exp(lshape))) * x / exp(lmean)
+  if(xlog==TRUE) xx <- x^2 else xx <- x
+  res <- dweibull(x, exp(lshape), exp(lmean)/gamma(1+1/exp(lshape))) * xx / exp(lmean)
   res[res==0] <- 5e-324
   if(log==TRUE) log(res) else (res)
 }  
@@ -114,7 +123,7 @@ setClass("sbm", representation("list"))
 
 AIC.sbm <- function(obj) AIC(obj$model)
 
-plot.sbm <- function(obj, lcol="red", ...){
+plot.sbm <- function(obj, log=TRUE, lcol="red", ...){
   if(length(attr(terms(obj$formula), "term.labels")) > 0)
     stop("Cannot plot covariate models")
 
@@ -123,26 +132,27 @@ plot.sbm <- function(obj, lcol="red", ...){
   if(xname %in% names(obj$model@data)) x <- get(xname, dat) else x <- get(xname)
   dots <- list(...)
   argnames <- names(dots)
-  hdots <- list(x=x, plot=FALSE)
-  if("breaks" %in% argnames) 
-    hdots <- c(hdots, dots["breaks"]) else 
-      hdots <- c(hdots, breaks=50) 
-  h <- do.call(function(...) hist(...), hdots)
-
-  sq <- seq(1e-10, max(x), len=256)
+  if("breaks" %in% argnames) brks <- dots["breaks"] else brks <- 50
   cfs <- coef(obj$model)
-  f <- switch(obj$pdf,
-              gamma = dsbgamma(sq, cfs[1], cfs[2]),
-              lnorm = dsblnorm(sq, cfs[1], cfs[2]),
-              weibull = dsbweibull(sq, cfs[1], cfs[2])
+  if(log){
+    lnx <- log(x)
+    h <- do.call(hist, c(list(x=lnx, plot=FALSE), brks))
+    sq <- exp(seq(min(lnx), max(lnx), len=256))
+  } else{
+    h <- do.call(hist, c(list(x=x, plot=FALSE), brks))
+    sq <- seq(1e-10, max(x), len=256)
+  }
+  h$xname <- "x"
+  den <- switch(obj$pdf,
+              gamma = dsbgamma(sq, cfs[1], cfs[2], xlog=log),
+              lnorm = dsblnorm(sq, cfs[1], cfs[2], xlog=log),
+              weibull = dsbweibull(sq, cfs[1], cfs[2], xlog=log)
   )
-  den <- f * diff(h$mids[1:2]) * length(x)
-
   dots <- dots[!argnames=="breaks"]
-  dots <- c(x=list(h), dots)
+  dots <- c(list(h, freq=FALSE), dots)
   if(!("main" %in% argnames)) dots <- c(dots, main="")
   if(!("xlab" %in% argnames)) dots <- c(dots, xlab=xname)
-  if(!("ylim" %in% argnames)) dots <- c(dots, list(ylim=c(0,max(c(den, h$counts)))))
-  do.call(function(...) plot(...), dots)
-  lines(sq, den, col=lcol)
+  if(!("ylim" %in% argnames)) dots <- c(dots, list(ylim=c(0,max(c(den, h$density)))))
+  do.call(plot, dots)
+  if(log) lines(log(sq), den, col=lcol) else lines(sq, den, col=lcol)
 }
