@@ -7,12 +7,6 @@ hmean <- function(x){
   c(mean=mn, se=se)
 }
 
-
-dlnorm(x, log(mn)-p2^2/2,p2) * x^2/mn 
-
-dlnorm(exp(lnx), log(cf[1])-cf[2]^2/2,cf[2]) * exp(lnx)^2/cf[1]
-
-  
 dsblnorm = function(x, lmean, lsig, log=FALSE, xlog=FALSE){
   lmean <- as.vector(lmean)
   if(xlog==TRUE) xx <- x^2 else xx <- x
@@ -92,7 +86,7 @@ predict.sbm <- function(mod, newdata=NULL, reps=1000){
   mat <- model.matrix(ff, m)
   res <- exp(mat %*% t(scfs))
   outp <- data.frame(newdata[, -ncol(newdata)], 
-              speed=exp(mat %*% matrix(cfs, ncol=1)),
+              est=exp(mat %*% matrix(cfs, ncol=1)),
               se=apply(res, 1, sd),
               lcl=apply(res, 1, quantile, 0.025),
               ucl=apply(res, 1, quantile, 0.975)
@@ -123,7 +117,8 @@ setClass("sbm", representation("list"))
 
 AIC.sbm <- function(obj) AIC(obj$model)
 
-plot.sbm <- function(obj, log=TRUE, lcol="red", ...){
+#...: if breaks given, passed to hist definition, otherwise passed to plot
+plot.sbm <- function(obj, log=TRUE, lpar=list(col="red"), add=FALSE, ...){
   if(length(attr(terms(obj$formula), "term.labels")) > 0)
     stop("Cannot plot covariate models")
 
@@ -153,6 +148,7 @@ plot.sbm <- function(obj, log=TRUE, lcol="red", ...){
   if(!("main" %in% argnames)) dots <- c(dots, main="")
   if(!("xlab" %in% argnames)) dots <- c(dots, xlab=xname)
   if(!("ylim" %in% argnames)) dots <- c(dots, list(ylim=c(0,max(c(den, h$density)))))
-  do.call(plot, dots)
-  if(log) lines(log(sq), den, col=lcol) else lines(sq, den, col=lcol)
+  if(!add) do.call(plot, dots)
+  if(log) sq <- log(sq)
+  do.call(lines, c(list(x=sq, y=den), lpar))
 }
