@@ -59,7 +59,7 @@ sbm <- function(formula, data, pdf=c("lnorm", "gamma", "weibull"),
   model <- mle2(f1, start=startpars, data=data, method="L-BFGS-B",
                 lower=lwr, upper=upr, parameters=list(f2), trace=trace)
   
-  res <- list(model=model, pdf=pdf, formula=formula)
+  res <- list(model=model, pdf=dstrbn, formula=formula)
   class(res) <- "sbm"
   res
 }
