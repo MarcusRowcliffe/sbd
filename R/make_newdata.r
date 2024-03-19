@@ -6,7 +6,8 @@
 #'
 #' @param formula A two-sided formula of the form response ~ covariate + ...
 #' @param data A dataframe containing the fields named in formula.
-#' @param newdata A text value naming the probability density function to use.
+#' @param newdata A dataframe of covariate values with fields matching variables
+#'  in \code{formula}.
 #' @return A dataframe of covariate values.
 #' @details When \code{newdata} is missing, a new dataframe is created with
 #'  numeric variables held at their mean values, and all combinations of factors.
