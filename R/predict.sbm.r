@@ -4,7 +4,6 @@
 # mod: a size biased model created using sbm
 # newdata: a dataframe containing covarariate values at which to predict speed
 # reps: number of random replicates over which to calculate SE
-
 #' Predict estimates
 #'
 #' Generates predicted underlying averages from a size biased model,
