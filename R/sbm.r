@@ -23,17 +23,22 @@
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                 var.range=c(-4,4), trace=FALSE){
   dstrbn=match.arg(pdf)
-  y <- model.response(model.frame(formula, data))
+
+  vars <- all.vars(formula)
+  if(!all(vars %in% names(data)))
+    stop("Can't find all formula variables in data")
+
+  dat <- model.frame(formula, data)
+  y <- model.response(dat)
   hmod <- hmean(y)
 
   if(dstrbn == "none"){
-    if(length(all.vars(formula)) > 1)
+    if(length(vars) > 1)
       stop("You can't model covariates with a non-parametric fit")
-    est <- data.frame(est=hmod$mean, se=hmod$se,
-                      lcl=hmod$mean - 1.96 * hmod$se,
-                      ucl=hmod$mean + 1.96 * hmod$se)
-    dat <- data.frame(y)
-    names(dat) <- as.character(formula)[2]
+    est <- data.frame(est = hmod$mean,
+                      se = hmod$se,
+                      lcl = hmod$mean - 1.96 * hmod$se,
+                      ucl = hmod$mean + 1.96 * hmod$se)
     res <- list(estimate=est, model=NULL, pdf=dstrbn, formula=formula, data=dat)
     class(res) <- "sbm"
   } else{
@@ -61,10 +66,10 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                  weibull = as.formula(paste(as.character(formula)[2], "~ dsbweibull(lmean, lshape)"))
                  )
     f2 <- as.formula(paste("lmean ~", as.character(formula)[3]))
-    model <- mle2(f1, start=startpars, data=data, method="L-BFGS-B",
+    model <- mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
                   lower=lwr, upper=upr, parameters=list(f2), trace=trace)
 
-    res <- list(model=model, pdf=dstrbn, formula=formula, data=as.data.frame(model@data))
+    res <- list(model=model, pdf=dstrbn, formula=formula, data=dat)
     class(res) <- "sbm"
     res$estimate <- predict(res)
   }
