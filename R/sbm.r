@@ -16,8 +16,17 @@
 #'  pdf = "none", the harmonic mean and it's standard error are calculated,
 #'  and no covariates can be used.
 #' @examples
-#'   data(data)
-#'   hmean(data$speed)
+#'   data(sbdData)
+#'   # harmonic mean estimate
+#'   hmod <- sbm(speed~1, sbdData)
+#'
+#'   # lognormal estimate with or without a covariate
+#'   lmod1 <- sbm(speed~1, sbdData, pdf="lnorm")
+#'   lmod2 <- sbm(speed~cov1, sbdData, pdf="lnorm")
+#'
+#'   # inspect estimates
+#'   hmod$estimate
+#'   lmod1$estimate
 #' @export
 #'
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
