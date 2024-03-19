@@ -1,9 +1,3 @@
-
-# Makes a table of new data for prediction, based on original data
-# if newdata=NULL (in which case mean numeric variables and all category
-# combos created), otherwise returns newdata with non-numeric variables
-# as factors
-
 #' Make new data for prediction
 #'
 #' Creates or converts a dataframe of covariates to pass to
