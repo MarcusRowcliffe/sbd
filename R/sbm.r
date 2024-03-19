@@ -1,9 +1,25 @@
-
-#Size biased model
-#INPUT
-# formula: a model formula with speed variable on the left and covariates (or 1) on the right
-# data: a dataframe containing the speed variable and any covariates
-# pdf: which (size biased) distribution to fit
+#' Fit a size biased model
+#'
+#' Fits a parametric or non-parametric size biased distribution model to a
+#' positive response variable.
+#'
+#' @param formula A two-sided formula of the form response ~ covariate + ...
+#' @param data A dataframe containing the fields named in formula.
+#' @param pdf A text value naming the probability density function to use.
+#' @param var.range The range of log variance within which to search when
+#'  fitting parametric distributions.
+#' @param trace Logical defining whether to show fit information when fitting
+#'  parametric distributions (passed to \code{\link[bbmle]{mle2}}.
+#' @return A list of class \code{\link{sbm}}.
+#' @details Response values must be strictly positive. To fit a distribution
+#'  without covariates use 1 on the right hand side of the formula. When
+#'  pdf = "none", the harmonic mean and it's standard error are calculated,
+#'  and no covariates can be used.
+#' @examples
+#'   data(data)
+#'   hmean(data$speed)
+#' @export
+#'
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                 var.range=c(-4,4), trace=FALSE){
   dstrbn=match.arg(pdf)
