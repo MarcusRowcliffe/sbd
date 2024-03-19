@@ -2,6 +2,6 @@
 #' \code{cov1} (a numeric covariate), and \code{cov2} (a factor covariate).
 #'
 #' @format A dataframe.
-#' @name data
+#' @name sbdData
 #' @docType data
 NULL
