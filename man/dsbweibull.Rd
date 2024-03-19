@@ -27,6 +27,6 @@ Weibull probability density when the likelihood of recording an
 observation is proportional to its value.
 }
 \examples{
-  data(data)
-  dsbweibull(data$speed, 0, 0.1)
+  data(sbdData)
+  dsbweibull(sbdData$speed, 0, 0.1)
 }

@@ -15,7 +15,7 @@
 #' @param reps Integer giving the number of random draws for variance estimation.
 #' @return A dataframe of predictions with fields \code{est} (estimated average),
 #'  \code{se} (estimated standard error), and \code{lcl}, \code{ucl} (lower and
-#'  upper 95% confidence limits).
+#'  upper 95 percent confidence limits).
 #' @details When \code{newdata} is missing, \code{make_table} is used to
 #'  generate a dataframe of covariates at which to predict, based on the
 #'  model formula and covariate data.

@@ -27,6 +27,6 @@ gamma probability density when the likelihood of recording an
 observation is proportional to its value.
 }
 \examples{
-  data(data)
-  dsbgamma(data$speed, 0, 0.1)
+  data(sbdData)
+  dsbgamma(sbdData$speed, 0, 0.1)
 }

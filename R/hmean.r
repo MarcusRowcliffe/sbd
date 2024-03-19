@@ -8,7 +8,7 @@
 #' @return A list with values \code{mean} and \code{se}.
 #' @examples
 #'   data(sbdData)
-#'   hmean(data$speed)
+#'   hmean(sbdData$speed)
 #' @export
 #'
 hmean <- function(x, na.rm=TRUE){

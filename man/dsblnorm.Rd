@@ -27,6 +27,6 @@ log-normal probability density when the likelihood of recording an
 observation is proportional to its value.
 }
 \examples{
-  data(data)
-  dsblnorm(data$speed, 0, 0.1)
+  data(sbdData)
+  dsblnorm(sbdData$speed, 0, 0.1)
 }

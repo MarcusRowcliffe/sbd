@@ -19,6 +19,6 @@ A list with values \code{mean} and \code{se}.
 Calculates harmonic mean and its standard error.
 }
 \examples{
-  data(data)
-  hmean(data$speed)
+  data(sbdData)
+  hmean(sbdData$speed)
 }

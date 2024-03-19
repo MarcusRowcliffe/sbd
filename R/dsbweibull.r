@@ -12,8 +12,8 @@
 #'  transformed data.
 #' @return A vector of probability densities.
 #' @examples
-#'   data(data)
-#'   dsbweibull(data$speed, 0, 0.1)
+#'   data(sbdData)
+#'   dsbweibull(sbdData$speed, 0, 0.1)
 #' @export
 #'
 dsbweibull <- function(x, lmean, lshape, log=FALSE, xlog=FALSE){

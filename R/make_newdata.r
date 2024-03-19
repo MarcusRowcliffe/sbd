@@ -4,7 +4,8 @@
 #' \code{\link{predict.sbm}}, based on the \code{data} used in the model to be
 #' used for prediction.
 #'
-#' @param formula A two-sided formula of the form response ~ covariate + ...
+#' @param formula A two-sided formula of the form
+#'  \code{response ~ covariate + ...}
 #' @param data A dataframe containing the fields named in formula.
 #' @param newdata A dataframe of covariate values with fields matching variables
 #'  in \code{formula}.

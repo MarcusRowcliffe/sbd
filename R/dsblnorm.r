@@ -12,8 +12,8 @@
 #'  transformed data.
 #' @return A vector of probability densities.
 #' @examples
-#'   data(data)
-#'   dsblnorm(data$speed, 0, 0.1)
+#'   data(sbdData)
+#'   dsblnorm(sbdData$speed, 0, 0.1)
 #' @export
 #'
 dsblnorm <- function(x, lmean, lsig, log=FALSE, xlog=FALSE){
