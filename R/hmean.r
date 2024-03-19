@@ -7,7 +7,7 @@
 #'  to strip out missing values before computing.
 #' @return A list with values \code{mean} and \code{se}.
 #' @examples
-#'   data(data)
+#'   data(sbdData)
 #'   hmean(data$speed)
 #' @export
 #'

@@ -32,7 +32,7 @@ plot.sbm <- function(mod, log=TRUE, add=FALSE,
   if(log) x <- log(x)
 
   if(mod$pdf != "none" & length(allvars) == 1){
-    cfs <- coef(mod$model)
+    cfs <- bbmle::coef(mod$model)
     sq <- seq(min(x), max(x), len=256)
     if(log) sq <- exp(sq)
     den <- switch(mod$pdf,

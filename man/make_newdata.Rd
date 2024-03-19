@@ -26,7 +26,7 @@ used for prediction.
 When \code{newdata} is missing, a new dataframe is created with
  numeric variables held at their mean values, and all combinations of factors.
  When a \code{newdata} dataframe is provided it is checked for compatibility
- with \formula{variables}, and character variables are converted to factors,
+ with \code{formula} variables, and character variables are converted to factors,
  but otherwise passed unchanged.
 }
 \examples{

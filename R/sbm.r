@@ -48,8 +48,12 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                       se = hmod$se,
                       lcl = hmod$mean - 1.96 * hmod$se,
                       ucl = hmod$mean + 1.96 * hmod$se)
-    res <- list(estimate=est, model=NULL, pdf=dstrbn, formula=formula, data=dat)
-    class(res) <- "sbm"
+    res <- list(estimate=est,
+                model=NULL,
+                pdf=dstrbn,
+                formula=formula,
+                data=dat) %>%
+      new_sbm()
   } else{
 
     lmn <- log(hmod$mean)
@@ -75,11 +79,15 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                  weibull = as.formula(paste(as.character(formula)[2], "~ dsbweibull(lmean, lshape)"))
                  )
     f2 <- as.formula(paste("lmean ~", as.character(formula)[3]))
-    model <- mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
+    model <- bbmle::mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
                   lower=lwr, upper=upr, parameters=list(f2), trace=trace)
 
-    res <- list(model=model, pdf=dstrbn, formula=formula, data=dat)
-    class(res) <- "sbm"
+    res <- list(estimate=NULL,
+                model=model,
+                pdf=dstrbn,
+                formula=formula,
+                data=dat) %>%
+      new_sbm()
     res$estimate <- predict(res)
   }
   res

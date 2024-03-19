@@ -17,5 +17,5 @@
 AIC.sbm <- function(mod){
   if(mod$pdf == "none")
     NULL else
-      AIC(mod$model)
+      bbmle::AIC(mod$model)
 }
