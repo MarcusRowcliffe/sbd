@@ -4,6 +4,29 @@
 # mod: a size biased model created using sbm
 # newdata: a dataframe containing covarariate values at which to predict speed
 # reps: number of random replicates over which to calculate SE
+
+#' Predict estimates
+#'
+#' Generates predicted underlying averages from a size biased model,
+#' given a set of covariates if these are used in the model.
+#'
+#' @param mod A size biased model fit of class \code{\link{sbm}}.
+#' @param newdata A dataframe of covariate values with fields matching
+#'  covariates used in \code{mod}.
+#' @param reps Integer giving the number of random draws for variance estimation.
+#' @return A dataframe of predictions with fields \code{est} (estimated average),
+#'  \code{se} (estimated standard error), and \code{lcl}, \code{ucl} (lower and
+#'  upper 95% confidence limits).
+#' @details When \code{newdata} is missing, \code{make_table} is used to
+#'  generate a dataframe of covariates at which to predict, based on the
+#'  model formula and covariate data.
+#' @examples
+#'   data(sbdData)
+#'   lmod <- sbm(speed~cov1, sbdData, pdf="lnorm")
+#'   nd <- data.frame(cov1 = seq(-2, 2, len=40))
+#'   prdn <- predict(lmod, nd)
+#' @export
+#'
 predict.sbm <- function(mod, newdata=NULL, reps=1000){
   if(mod$pdf == "none")
     stop("You can't predict from a non-parametric fit")
