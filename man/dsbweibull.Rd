@@ -27,6 +27,7 @@ Weibull probability density when the likelihood of recording an
 observation is proportional to its value.
 }
 \examples{
-  data(sbdData)
-  dsbweibull(sbdData$speed, 0, 0.1)
+  data(BCI_speed_data)
+  agoutiData <- subset(BCI_speed_data, species=="agouti")
+  dsbweibull(agoutiData$speed, 0, 0.1)
 }

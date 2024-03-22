@@ -27,6 +27,7 @@ gamma probability density when the likelihood of recording an
 observation is proportional to its value.
 }
 \examples{
-  data(sbdData)
-  dsbgamma(sbdData$speed, 0, 0.1)
+  data(BCI_speed_data)
+  agoutiData <- subset(BCI_speed_data, species=="agouti")
+  dsbgamma(agoutiData$speed, 0, 0.1)
 }

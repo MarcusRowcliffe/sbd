@@ -20,10 +20,11 @@
 #'  generate a dataframe of covariates at which to predict, based on the
 #'  model formula and covariate data.
 #' @examples
-#'   data(sbdData)
-#'   lmod <- sbm(speed~cov1, sbdData, pdf="lnorm")
-#'   nd <- data.frame(cov1 = seq(-2, 2, len=40))
-#'   prdn <- predict(lmod, nd)
+#'   data(BCI_speed_data)
+#'   agoutiData <- subset(BCI_speed_data, species=="agouti")
+#'   lmod_mass <- sbm(speed~mass, agoutiData, pdf="lnorm")
+#'   nd <- data.frame(mass = seq(1, 50, len=100))
+#'   prdn <- predict(lmod_mass, nd)
 #' @export
 #'
 predict.sbm <- function(mod, newdata=NULL, reps=1000){

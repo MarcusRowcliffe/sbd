@@ -4,13 +4,13 @@
 \alias{AIC.sbm}
 \title{Get AIC of size biased model}
 \usage{
-\method{AIC}{sbm}(mod)
+\method{AIC}{sbm}(...)
 }
 \arguments{
-\item{mod}{A size biased model fit of class \code{\link{sbm}}.}
+\item{...}{One or more size biased models of class \code{sbm}.}
 }
 \value{
-A numeric, AIC value, or NULL if the model is non-parametric
+A dataframe of AIC values, NA if the model is non-parametric
  (fitted with \code{pdf = "none"}).
 }
 \description{
@@ -18,9 +18,8 @@ Extracts the Akaike Information Criterion from a fitted parametric size
 biased distribution model.
 }
 \examples{
-  data(sbdData)
-  lmod1 <- sbm(speed~1, sbdData, pdf="lnorm")
-  lmod2 <- sbm(speed~cov1, sbdData, pdf="lnorm")
-  AIC(lmod1)
-  AIC(lmod2)
+  data(BCI_speed_data)
+  lmod_null <- sbm(speed~1, BCI_speed_data, pdf="lnorm")
+  lmod_mass <- sbm(speed~mass, BCI_speed_data, pdf="lnorm")
+  AIC.sbm(lmod_null, lmod_mass)
 }

@@ -7,8 +7,9 @@
 #'  to strip out missing values before computing.
 #' @return A list with values \code{mean} and \code{se}.
 #' @examples
-#'   data(sbdData)
-#'   hmean(sbdData$speed)
+#'   data(BCI_speed_data)
+#'   agoutiData <- subset(BCI_speed_data, species=="agouti")
+#'   hmean(agoutiData$speed)
 #' @export
 #'
 hmean <- function(x, na.rm=TRUE){

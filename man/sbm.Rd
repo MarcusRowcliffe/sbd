@@ -39,15 +39,20 @@ Response values must be strictly positive. To fit a distribution
  and no covariates can be used.
 }
 \examples{
-  data(sbdData)
-  # harmonic mean estimate
-  hmod <- sbm(speed~1, sbdData)
+  data(BCI_speed_data)
+  agoutiData <- subset(BCI_speed_data, species=="agouti")
 
-  # lognormal estimate with or without a covariate
-  lmod1 <- sbm(speed~1, sbdData, pdf="lnorm")
-  lmod2 <- sbm(speed~cov1, sbdData, pdf="lnorm")
+  # harmonic mean estimate for agouti
+  hmod <- sbm(speed~1, agoutiData)
+  lmod <- sbm(speed~1, agoutiData, pdf="lnorm")
+
+  # lognormal estimate with or without a covariates
+  lmod_mass <- sbm(speed~mass, BCI_speed_data, pdf="lnorm")
+  lmod_spp <- sbm(speed~species, BCI_speed_data, pdf="lnorm")
 
   # inspect estimates
   hmod$estimate
-  lmod1$estimate
+  lmod$estimate
+  lmod_mass$estimate
+  lmod_spp$estimate
 }

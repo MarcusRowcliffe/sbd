@@ -16,9 +16,8 @@
 #'  with \code{formula} variables, and character variables are converted to factors,
 #'  but otherwise passed unchanged.
 #' @examples
-#'   data(sbdData)
-#'   nd1 <- make_newdata(speed ~ cov1 + cov2, sbdData)
-#'   nd2 <- make_newdata(speed ~ cov1, sbdData, data.frame(cov1 = -2:2))
+#'   data(BCI_speed_data)
+#'   nd1 <- make_newdata(speed ~ species, BCI_speed_data)
 #' @export
 #'
 make_newdata <- function(formula, data, newdata=NULL){

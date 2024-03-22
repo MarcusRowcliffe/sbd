@@ -12,8 +12,9 @@
 #'  transformed data.
 #' @return A vector of probability densities.
 #' @examples
-#'   data(sbdData)
-#'   dsbgamma(sbdData$speed, 0, 0.1)
+#'   data(BCI_speed_data)
+#'   agoutiData <- subset(BCI_speed_data, species=="agouti")
+#'   dsbgamma(agoutiData$speed, 0, 0.1)
 #' @export
 dsbgamma <- function(x, lmean, lrate, log=FALSE, xlog=FALSE){
   lmean <- as.vector(lmean)

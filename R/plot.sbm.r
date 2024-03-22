@@ -18,9 +18,11 @@
 #'  density curve line (if present).
 #' @return None.
 #' @examples
-#'   data(sbdData)
-#'   lmod <- sbm(speed~1, sbdData, pdf="lnorm")
-#'   wmod <- sbm(speed~1, sbdData, pdf="weibull")
+#'   # Fit and plot log-normal and Weibull models
+#'   data(BCI_speed_data)
+#'   agoutiData <- subset(BCI_speed_data, species=="agouti")
+#'   lmod <- sbm(speed~1, agoutiData, pdf="lnorm")
+#'   wmod <- sbm(speed~1, agoutiData, pdf="weibull")
 #'   plot(lmod, hpar=list(breaks = 40))
 #'   plot(wmod, add=TRUE, lpar=list(col="blue"))
 #' @export

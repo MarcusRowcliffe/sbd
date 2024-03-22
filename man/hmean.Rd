@@ -19,6 +19,7 @@ A list with values \code{mean} and \code{se}.
 Calculates harmonic mean and its standard error.
 }
 \examples{
-  data(sbdData)
-  hmean(sbdData$speed)
+  data(BCI_speed_data)
+  agoutiData <- subset(BCI_speed_data, species=="agouti")
+  hmean(agoutiData$speed)
 }

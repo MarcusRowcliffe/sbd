@@ -12,8 +12,9 @@
 #'  transformed data.
 #' @return A vector of probability densities.
 #' @examples
-#'   data(sbdData)
-#'   dsblnorm(sbdData$speed, 0, 0.1)
+#'   data(BCI_speed_data)
+#'   agoutiData <- subset(BCI_speed_data, species=="agouti")
+#'   dsblnorm(agoutiData$speed, 0, 0.1)
 #' @export
 #'
 dsblnorm <- function(x, lmean, lsig, log=FALSE, xlog=FALSE){

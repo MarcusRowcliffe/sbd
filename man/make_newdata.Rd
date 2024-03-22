@@ -7,7 +7,8 @@
 make_newdata(formula, data, newdata = NULL)
 }
 \arguments{
-\item{formula}{A two-sided formula of the form response ~ covariate + ...}
+\item{formula}{A two-sided formula of the form
+\code{response ~ covariate + ...}}
 
 \item{data}{A dataframe containing the fields named in formula.}
 
@@ -30,7 +31,6 @@ When \code{newdata} is missing, a new dataframe is created with
  but otherwise passed unchanged.
 }
 \examples{
-  data(sbdData)
-  nd1 <- make_newdata(speed ~ cov1 + cov2, sbdData)
-  nd2 <- make_newdata(speed ~ cov1, sbdData, data.frame(cov1 = -2:2))
+  data(BCI_speed_data)
+  nd1 <- make_newdata(speed ~ species, BCI_speed_data)
 }
