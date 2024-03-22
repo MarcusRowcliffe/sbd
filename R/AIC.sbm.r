@@ -27,5 +27,5 @@ AIC.sbm <- function(...){
                     PDF = pdfs,
                     AIC = aics,
                     dAIC = aics-min(aics, na.rm=TRUE))
-  dplyr::arrange(res, dAIC)
+  res[order(res$dAIC), ]
 }

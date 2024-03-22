@@ -2,7 +2,7 @@
 #'
 #' For parametric models only, summarises the linear model parameter estimates.
 #'
-#' @param mod A size biased model fit of class \code{\link{sbm}}.
+#' @param object A size biased model fit of class \code{\link{sbm}}.
 #' @return A dataframe with fields \code{estimate}, \code{stdError},
 #'  \code{tValue}, and \code{pValue}.
 #' @examples
@@ -11,13 +11,13 @@
 #'   summary(mod)
 #' @export
 #'
-summary.sbm <- function(mod){
-  if(mod$pdf == "none") NULL else{
-    cf <- mod$model@coef
-    se <- sqrt(diag(mod$model@vcov))
+summary.sbm <- function(object){
+  if(object$pdf == "none") NULL else{
+    cf <- object$model@coef
+    se <- sqrt(diag(object$model@vcov))
     tval <- abs(cf / se)
-    df <- nrow(mod$data) - length(cf)
-    pval <- 2 * pt(tval, df, lower=FALSE)
+    df <- nrow(object$data) - length(cf)
+    pval <- 2 * pt(tval, df, lower.tail=FALSE)
     data.frame(estimate = cf, stdError = se, tValue = tval, pValue = pval)
   }
 }

@@ -4,10 +4,10 @@
 \alias{summary.sbm}
 \title{Summarise a linear model}
 \usage{
-\method{summary}{sbm}(mod)
+\method{summary}{sbm}(object)
 }
 \arguments{
-\item{mod}{A size biased model fit of class \code{\link{sbm}}.}
+\item{object}{A size biased model fit of class \code{\link{sbm}}.}
 }
 \value{
 A dataframe with fields \code{estimate}, \code{stdError},

@@ -33,7 +33,7 @@ predict.sbm <- function(mod, newdata=NULL, reps=1000){
 
   newdata <- make_newdata(mod$formula, mod$data, newdata)
   newdata$lmean <- 0
-  if(class(newdata) == "list") newdata <- as.data.frame(newdata)
+  if(inherits(newdata, "list")) newdata <- as.data.frame(newdata)
   cfs <- mod$model@coef
   scfs <- MASS::mvrnorm(reps, cfs, mod$model@vcov)
   i <- grep("lmean.", colnames(scfs))
