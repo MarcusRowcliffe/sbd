@@ -4,15 +4,17 @@
 \alias{predict.sbm}
 \title{Predict estimates}
 \usage{
-\method{predict}{sbm}(mod, newdata = NULL, reps = 1000)
+\method{predict}{sbm}(object, newdata = NULL, reps = 999, ...)
 }
 \arguments{
-\item{mod}{A size biased model fit of class \code{\link{sbm}}.}
+\item{object}{A size biased model fit of class \code{\link{sbm}}.}
 
 \item{newdata}{A dataframe of covariate values with fields matching
-covariates used in \code{mod}.}
+covariates used in \code{object}.}
 
 \item{reps}{Integer giving the number of random draws for variance estimation.}
+
+\item{...}{Additional arguments (unused).}
 }
 \value{
 A dataframe of predictions with fields \code{est} (estimated average),
@@ -32,6 +34,6 @@ When \code{newdata} is missing, \code{make_table} is used to
   data(BCI_speed_data)
   agoutiData <- subset(BCI_speed_data, species=="agouti")
   lmod_mass <- sbm(speed~mass, agoutiData, pdf="lnorm")
-  nd <- data.frame(mass = seq(1, 50, len=100))
-  prdn <- predict(lmod_mass, nd)
+  nd <- data.frame(mass = c(1, 10, 100))
+  predict(lmod_mass, nd)
 }

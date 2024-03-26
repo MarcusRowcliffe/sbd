@@ -17,7 +17,7 @@
 #'  but otherwise passed unchanged.
 #' @examples
 #'   data(BCI_speed_data)
-#'   nd1 <- make_newdata(speed ~ species, BCI_speed_data)
+#'   make_newdata(speed ~ species, BCI_speed_data)
 #' @export
 #'
 make_newdata <- function(formula, data, newdata=NULL){

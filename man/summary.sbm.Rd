@@ -4,10 +4,12 @@
 \alias{summary.sbm}
 \title{Summarise a linear model}
 \usage{
-\method{summary}{sbm}(object)
+\method{summary}{sbm}(object, ...)
 }
 \arguments{
 \item{object}{A size biased model fit of class \code{\link{sbm}}.}
+
+\item{...}{Additional arguments (unused).}
 }
 \value{
 A dataframe with fields \code{estimate}, \code{stdError},

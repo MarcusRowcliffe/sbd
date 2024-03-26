@@ -32,5 +32,5 @@ When \code{newdata} is missing, a new dataframe is created with
 }
 \examples{
   data(BCI_speed_data)
-  nd1 <- make_newdata(speed ~ species, BCI_speed_data)
+  make_newdata(speed ~ species, BCI_speed_data)
 }
