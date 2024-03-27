@@ -2,12 +2,14 @@ Package: sbd
 Type: Package
 Title: Size Biased Distributions
 Version: 0.1.0
-Author: Marcus Rowcliffe
-Maintainer: Marcus Rowcliffe <marcus.rowcliffe@ioz.ac.uk>
-Description: Functions for fitting and plotting parametric or non-parametric 
-    size-biased non-negative distributions, with optional covariates in the 
-    case of parametric. Supports three parametric options, log-normal, Weibull, 
-    and gamma.
+Authors@R: person("Marcus", "Rowcliffe", 
+    email = "marcus.rowcliffe@ioz.ac.uk",
+    role = c("aut", "cre"))
+Description: Fitting and plotting parametric or non-parametric size-biased 
+    non-negative distributions, with optional covariates in the case of 
+    parametric.
+    Rowcliffe, M. et al. (2016) <doi:10.1002/rse2.17>.
+URL: https://github.com/MarcusRowcliffe/sbd
 License: GPL-3
 Encoding: UTF-8
 Imports:

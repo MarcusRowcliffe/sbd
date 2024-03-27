@@ -22,11 +22,25 @@ sbm(
 \item{var.range}{The range of log variance within which to search when
 fitting parametric distributions.}
 
-\item{trace}{Logical defining whether to show fit information when fitting
-parametric distributions (passed to \code{\link[bbmle]{mle2}}.}
+\item{trace}{Logical defining whether to show diagnostic information when
+fitting parametric distributions (passed to \code{\link[bbmle]{mle2}}).}
 }
 \value{
-A list of class \code{\link{sbm}}.
+A list of class \code{sbm} with methods \code{\link{summary.sbm}},
+ \code{\link{predict.sbm}}, \code{\link{hist.sbm}}, and
+ \code{\link{AIC.sbm}}. The list has elements:
+ \itemize{
+  \item{"estimate"}{A dataframe of estimated averages, their standard
+   errors and 95% confidence limits; returns a single row for models without
+   covariates; or with covariates, one estimate per unique combination of
+   factor covariate levels, with any quantitative covariates held at their
+   mean values.}
+  \item{"data"}{A dataframe containing the data used to fit the model.}
+  \item{"model"}{A model object of class \code{\link[bbmle]{mle2}.}}
+  \item{"formula"}{The formula supplied to the function call.}
+  \item{"pdf"}{Character string recording the probability density function
+   used to fit the model.}
+}
 }
 \description{
 Fits a parametric or non-parametric size biased distribution model to a

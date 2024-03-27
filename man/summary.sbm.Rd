@@ -16,7 +16,8 @@ A dataframe with fields \code{estimate}, \code{stdError},
  \code{tValue}, and \code{pValue}.
 }
 \description{
-For parametric models only, summarises the linear model parameter estimates.
+For parametric models only, summarises the linear model coefficients from a
+an \code{sbm} object.
 }
 \examples{
   data(BCI_speed_data)

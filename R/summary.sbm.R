@@ -1,6 +1,7 @@
 #' Summarise a linear model
 #'
-#' For parametric models only, summarises the linear model parameter estimates.
+#' For parametric models only, summarises the linear model coefficients from a
+#' an \code{sbm} object.
 #'
 #' @param object A size biased model fit of class \code{\link{sbm}}.
 #' @param ... Additional arguments (unused).
