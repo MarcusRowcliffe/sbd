@@ -64,7 +64,7 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
   if(!all(vars %in% names(data)))
     stop("Can't find all formula variables in data")
 
-  dat <- model.frame(formula, data)
+  dat <- stats::model.frame(formula, data)
   y <- model.response(dat)
 
   if(dstrbn == "none"){
@@ -95,7 +95,6 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                   weibull = "~ dsbweibull(lmean, lshape)")
     f1 <- as.formula(paste(vars[1], dep))
     f2 <- as.formula(paste("lmean ~", as.character(formula)[3]))
-    f2 <- reformulate(attr(terms(formula), "term.labels"), "lmean")
     model <- bbmle::mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
                   lower=lwr, upper=upr, parameters=list(f2), trace=trace)
 
