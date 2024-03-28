@@ -6,11 +6,12 @@
 #' @param formula A two-sided formula of the form response ~ covariate + ...
 #' @param data A dataframe containing the fields named in formula.
 #' @param pdf A text value naming the probability density function to use.
-#' @param newdata A dataframe of covariate values at which to predict averages.
 #' @param var.range The range of log variance within which to search when
 #'  fitting parametric distributions.
 #' @param trace Logical defining whether to show diagnostic information when
 #'  fitting parametric distributions (passed to \code{\link[bbmle]{mle2}}).
+#' @param ... Arguments passed to \code{\link{predict.sbm}} (options:
+#'  \code{newdata}, \code{reps}).
 #' @return A list of class \code{sbm} with methods \code{\link{summary.sbm}},
 #'  \code{\link{predict.sbm}}, \code{\link{hist.sbm}}, and
 #'  \code{\link{AIC.sbm}}. The list has elements:
@@ -56,7 +57,7 @@
 #' @export
 #'
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
-                newdata = NULL, var.range=c(-4,4), trace=FALSE){
+                var.range=c(-4,4), trace=FALSE, ...){
   dstrbn=match.arg(pdf)
 
   vars <- all.vars(formula)
@@ -113,7 +114,7 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                         pdf=dstrbn,
                         formula=formula,
                         data=dat))
-    res$estimate <- predict(res, newdata, reps)
+    res$estimate <- predict(res, ...)
   }
   res
 }
