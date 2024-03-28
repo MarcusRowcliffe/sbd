@@ -58,7 +58,7 @@
 #'
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                 var.range=c(-4,4), trace=FALSE, ...){
-  dstrbn=match.arg(pdf)
+  dstrbn <- match.arg(pdf)
 
   vars <- all.vars(formula)
   if(!all(vars %in% names(data)))
@@ -66,24 +66,13 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
 
   dat <- model.frame(formula, data)
   y <- model.response(dat)
-  hmod <- hmean(y)
 
   if(dstrbn == "none"){
     if(length(vars) > 1)
       stop("You can't model covariates with a non-parametric fit")
-    est <- data.frame(est = hmod$mean,
-                      se = hmod$se,
-                      lcl = hmod$mean - 1.96 * hmod$se,
-                      ucl = hmod$mean + 1.96 * hmod$se)
-    res <- list(estimate=est,
-                model=NULL,
-                pdf=dstrbn,
-                formula=formula,
-                data=dat) %>%
-      new_sbm()
+    model <- NULL
   } else{
-
-    lmn <- log(hmod$mean)
+    lmn <- log(hmean(y)$mean)
     lv <- switch(dstrbn,
                   lnorm = log(sd(log(y))),
                   gamma = log(exp(lmn)/var(y)),
@@ -100,21 +89,22 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                   lnorm = c(lsig=var.range[2]),
                   gamma = c(lrate=var.range[2]),
                   weibull = c(lshape=var.range[2]))
-    f1 <- switch(dstrbn,
-                 lnorm = as.formula(paste(as.character(formula)[2], "~ dsblnorm(lmean, lsig)")),
-                 gamma = as.formula(paste(as.character(formula)[2], "~ dsbgamma(lmean, lrate)")),
-                 weibull = as.formula(paste(as.character(formula)[2], "~ dsbweibull(lmean, lshape)"))
-                 )
+    dep <- switch(dstrbn,
+                  lnorm = "~ dsblnorm(lmean, lsig)",
+                  gamma = "~ dsbgamma(lmean, lrate)",
+                  weibull = "~ dsbweibull(lmean, lshape)")
+    f1 <- as.formula(paste(vars[1], dep))
     f2 <- as.formula(paste("lmean ~", as.character(formula)[3]))
+    f2 <- reformulate(attr(terms(formula), "term.labels"), "lmean")
     model <- bbmle::mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
                   lower=lwr, upper=upr, parameters=list(f2), trace=trace)
 
-    res <- new_sbm(list(estimate=NULL,
-                        model=model,
-                        pdf=dstrbn,
-                        formula=formula,
-                        data=dat))
-    res$estimate <- predict(res, ...)
   }
+  res <- new_sbm(list(estimate=NULL,
+                      model=model,
+                      pdf=dstrbn,
+                      formula=formula,
+                      data=dat))
+  res$estimate <- predict(res, ...)
   res
 }
