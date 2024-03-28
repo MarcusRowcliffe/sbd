@@ -34,10 +34,11 @@ make_newdata <- function(formula, data, newdata=NULL){
            if(is.numeric(x)) mean(x, na.rm=T) else levels(x)) %>%
          expand.grid()
   } else{
+    newdata <- as.data.frame(newdata)
     if(!all(covars %in% names(newdata)))
       stop("Can't find all formula variables in newdata")
     for(v in covars){
-      if(!is.numeric(pull(newdata[, v])))
+      if(!is.numeric(newdata[, v]))
         newdata[, v] <- factor(newdata[, v], levels=levels(data[, v]))
     }
   }
