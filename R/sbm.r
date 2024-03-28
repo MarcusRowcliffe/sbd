@@ -6,6 +6,7 @@
 #' @param formula A two-sided formula of the form response ~ covariate + ...
 #' @param data A dataframe containing the fields named in formula.
 #' @param pdf A text value naming the probability density function to use.
+#' @param newdata A dataframe of covariate values at which to predict averages.
 #' @param var.range The range of log variance within which to search when
 #'  fitting parametric distributions.
 #' @param trace Logical defining whether to show diagnostic information when
@@ -15,10 +16,7 @@
 #'  \code{\link{AIC.sbm}}. The list has elements:
 #'  \itemize{
 #'   \item{"estimate"}{A dataframe of estimated averages, their standard
-#'    errors and 95% confidence limits; returns a single row for models without
-#'    covariates; or with covariates, one estimate per unique combination of
-#'    factor covariate levels, with any quantitative covariates held at their
-#'    mean values.}
+#'    errors and 95% confidence limits.}
 #'   \item{"data"}{A dataframe containing the data used to fit the model.}
 #'   \item{"model"}{A model object of class \code{\link[bbmle]{mle2}.}}
 #'   \item{"formula"}{The formula supplied to the function call.}
@@ -29,6 +27,15 @@
 #'  without covariates use 1 on the right hand side of the formula. When
 #'  pdf = "none", the harmonic mean and it's standard error are calculated,
 #'  and no covariates can be used.
+#'
+#'  The contents of the the \code{estimate} component of the result depends
+#'  on the type of model. When no covariates are used, it contains a single
+#'  overall average estimate. When covariates are used and \code{newdata = NULL},
+#'  it contains one estimate per unique combination of factor covariate levels,
+#'  with any quantitative covariates held at their mean values. When covariates
+#'  are used and a dataframe with valid covariate fields is supplied to
+#'  \code{newdata}, it replicates \code{newdata} appending averages estimated at
+#'  the covariate values supplied.
 #' @examples
 #'   data(BCI_speed_data)
 #'   agoutiData <- subset(BCI_speed_data, species=="agouti")
@@ -49,7 +56,7 @@
 #' @export
 #'
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
-                var.range=c(-4,4), trace=FALSE){
+                newdata = NULL, var.range=c(-4,4), trace=FALSE){
   dstrbn=match.arg(pdf)
 
   vars <- all.vars(formula)
@@ -101,13 +108,12 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
     model <- bbmle::mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
                   lower=lwr, upper=upr, parameters=list(f2), trace=trace)
 
-    res <- list(estimate=NULL,
-                model=model,
-                pdf=dstrbn,
-                formula=formula,
-                data=dat)
-    class(res) <- "sbm"
-    res$estimate <- predict(res)
+    res <- new_sbm(list(estimate=NULL,
+                        model=model,
+                        pdf=dstrbn,
+                        formula=formula,
+                        data=dat))
+    res$estimate <- predict(res, newdata, reps)
   }
   res
 }
