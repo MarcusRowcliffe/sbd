@@ -23,26 +23,33 @@
 #' @export
 #'
 predict.sbm <- function(object, newdata=NULL, reps=999, ...){
-  if(object$pdf == "none")
-    stop("You can't predict from a non-parametric fit")
 
-  newdata <- make_newdata(object$formula, object$data, newdata)
-  newdata$lmean <- 0
-  if(inherits(newdata, "list")) newdata <- as.data.frame(newdata)
-  cfs <- object$model@coef
-  scfs <- MASS::mvrnorm(reps, cfs, object$model@vcov)
-  i <- grep("lmean.", colnames(scfs))
-  scfs <- scfs[,i]
-  cfs <- cfs[i]
-  ff <- formula(strsplit(object$model@formula, ": ")[[1]][2])
-  m <- model.frame(ff, newdata)
-  mat <- model.matrix(ff, m)
-  res <- exp(mat %*% t(scfs))
-  outp <- data.frame(newdata[, -ncol(newdata)],
-              est=exp(mat %*% matrix(cfs, ncol=1)),
-              se=apply(res, 1, sd),
-              lcl=apply(res, 1, quantile, 0.025),
-              ucl=apply(res, 1, quantile, 0.975))
-  names(outp)[1:(ncol(newdata))-1] <- names(newdata)[-ncol(newdata)]
+  if(object$pdf == "none"){
+    hmod <- hmean(dplyr::pull(object$data))
+    outp <- data.frame(est = hmod$mean,
+                       se = hmod$se,
+                       lcl = hmod$mean - 1.96 * hmod$se,
+                       ucl = hmod$mean + 1.96 * hmod$se)
+
+  } else{
+    newdata <- make_newdata(object$formula, object$data, newdata)
+    newdata$lmean <- 0
+    if(inherits(newdata, "list")) newdata <- as.data.frame(newdata)
+    cfs <- object$model@coef
+    scfs <- MASS::mvrnorm(reps, cfs, object$model@vcov)
+    i <- grep("lmean.", colnames(scfs))
+    scfs <- scfs[,i]
+    cfs <- cfs[i]
+    ff <- formula(strsplit(object$model@formula, ": ")[[1]][2])
+    m <- model.frame(ff, newdata)
+    mat <- model.matrix(ff, m)
+    res <- exp(mat %*% t(scfs))
+    outp <- data.frame(newdata[, -ncol(newdata)],
+                est=exp(mat %*% matrix(cfs, ncol=1)),
+                se=apply(res, 1, sd),
+                lcl=apply(res, 1, quantile, 0.025),
+                ucl=apply(res, 1, quantile, 0.975))
+    names(outp)[1:(ncol(newdata))-1] <- names(newdata)[-ncol(newdata)]
+  }
   outp
 }
