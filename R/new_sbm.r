@@ -1,4 +1,5 @@
 #' sbm (size biased model) class constructor
+#'
 #' @param x a list with required elements as indicated
 #' @noRd
 #'
