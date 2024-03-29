@@ -9,7 +9,8 @@ sbm(
   data,
   pdf = c("none", "lnorm", "gamma", "weibull"),
   var.range = c(-4, 4),
-  trace = FALSE
+  trace = FALSE,
+  ...
 )
 }
 \arguments{
@@ -24,23 +25,12 @@ fitting parametric distributions.}
 
 \item{trace}{Logical defining whether to show diagnostic information when
 fitting parametric distributions (passed to \code{\link[bbmle]{mle2}}).}
+
+\item{...}{Arguments passed to \code{\link{predict.sbm}} (options:
+\code{newdata}, \code{reps}).}
 }
 \value{
-A list of class \code{sbm} with methods \code{\link{summary.sbm}},
- \code{\link{predict.sbm}}, \code{\link{hist.sbm}}, and
- \code{\link{AIC.sbm}}. The list has elements:
- \itemize{
-  \item{"estimate"}{A dataframe of estimated averages, their standard
-   errors and 95% confidence limits; returns a single row for models without
-   covariates; or with covariates, one estimate per unique combination of
-   factor covariate levels, with any quantitative covariates held at their
-   mean values.}
-  \item{"data"}{A dataframe containing the data used to fit the model.}
-  \item{"model"}{A model object of class \code{\link[bbmle]{mle2}.}}
-  \item{"formula"}{The formula supplied to the function call.}
-  \item{"pdf"}{Character string recording the probability density function
-   used to fit the model.}
-}
+
 }
 \description{
 Fits a parametric or non-parametric size biased distribution model to a
@@ -51,6 +41,15 @@ Response values must be strictly positive. To fit a distribution
  without covariates use 1 on the right hand side of the formula. When
  pdf = "none", the harmonic mean and it's standard error are calculated,
  and no covariates can be used.
+
+ The contents of the the \code{estimate} component of the result depends
+ on the type of model. When no covariates are used, it contains a single
+ overall average estimate. When covariates are used and \code{newdata = NULL},
+ it contains one estimate per unique combination of factor covariate levels,
+ with any quantitative covariates held at their mean values. When covariates
+ are used and a dataframe with valid covariate fields is supplied to
+ \code{newdata}, it replicates \code{newdata} appending averages estimated at
+ the covariate values supplied.
 }
 \examples{
   data(BCI_speed_data)
