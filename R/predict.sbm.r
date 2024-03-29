@@ -25,7 +25,7 @@
 predict.sbm <- function(object, newdata=NULL, reps=999, ...){
 
   if(object$pdf == "none"){
-    hmod <- hmean(pull(object$data))
+    hmod <- hmean(dplyr::pull(object$data))
     outp <- data.frame(est = hmod$mean,
                        se = hmod$se,
                        lcl = hmod$mean - 1.96 * hmod$se,
