@@ -10,15 +10,14 @@
 #'  fitting parametric distributions.
 #' @param trace Logical defining whether to show diagnostic information when
 #'  fitting parametric distributions (passed to \code{\link[bbmle]{mle2}}).
+#' @param ... Arguments passed to \code{\link{predict.sbm}} (options:
+#'  \code{newdata}, \code{reps}).
 #' @return A list of class \code{sbm} with methods \code{\link{summary.sbm}},
 #'  \code{\link{predict.sbm}}, \code{\link{hist.sbm}}, and
 #'  \code{\link{AIC.sbm}}. The list has elements:
 #'  \itemize{
 #'   \item{"estimate"}{A dataframe of estimated averages, their standard
-#'    errors and 95% confidence limits; returns a single row for models without
-#'    covariates; or with covariates, one estimate per unique combination of
-#'    factor covariate levels, with any quantitative covariates held at their
-#'    mean values.}
+#'    errors and 95% confidence limits.}
 #'   \item{"data"}{A dataframe containing the data used to fit the model.}
 #'   \item{"model"}{A model object of class \code{\link[bbmle]{mle2}.}}
 #'   \item{"formula"}{The formula supplied to the function call.}
@@ -29,6 +28,15 @@
 #'  without covariates use 1 on the right hand side of the formula. When
 #'  pdf = "none", the harmonic mean and it's standard error are calculated,
 #'  and no covariates can be used.
+#'
+#'  The contents of the the \code{estimate} component of the result depends
+#'  on the type of model. When no covariates are used, it contains a single
+#'  overall average estimate. When covariates are used and \code{newdata = NULL},
+#'  it contains one estimate per unique combination of factor covariate levels,
+#'  with any quantitative covariates held at their mean values. When covariates
+#'  are used and a dataframe with valid covariate fields is supplied to
+#'  \code{newdata}, it replicates \code{newdata} appending averages estimated at
+#'  the covariate values supplied.
 #' @examples
 #'   data(BCI_speed_data)
 #'   agoutiData <- subset(BCI_speed_data, species=="agouti")
@@ -49,33 +57,22 @@
 #' @export
 #'
 sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
-                var.range=c(-4,4), trace=FALSE){
-  dstrbn=match.arg(pdf)
+                var.range=c(-4,4), trace=FALSE, ...){
+  dstrbn <- match.arg(pdf)
 
   vars <- all.vars(formula)
   if(!all(vars %in% names(data)))
     stop("Can't find all formula variables in data")
 
-  dat <- model.frame(formula, data)
+  dat <- stats::model.frame(formula, data)
   y <- model.response(dat)
-  hmod <- hmean(y)
 
   if(dstrbn == "none"){
     if(length(vars) > 1)
       stop("You can't model covariates with a non-parametric fit")
-    est <- data.frame(est = hmod$mean,
-                      se = hmod$se,
-                      lcl = hmod$mean - 1.96 * hmod$se,
-                      ucl = hmod$mean + 1.96 * hmod$se)
-    res <- list(estimate=est,
-                model=NULL,
-                pdf=dstrbn,
-                formula=formula,
-                data=dat) %>%
-      new_sbm()
+    model <- NULL
   } else{
-
-    lmn <- log(hmod$mean)
+    lmn <- log(hmean(y)$mean)
     lv <- switch(dstrbn,
                   lnorm = log(sd(log(y))),
                   gamma = log(exp(lmn)/var(y)),
@@ -92,22 +89,21 @@ sbm <- function(formula, data, pdf=c("none", "lnorm", "gamma", "weibull"),
                   lnorm = c(lsig=var.range[2]),
                   gamma = c(lrate=var.range[2]),
                   weibull = c(lshape=var.range[2]))
-    f1 <- switch(dstrbn,
-                 lnorm = as.formula(paste(as.character(formula)[2], "~ dsblnorm(lmean, lsig)")),
-                 gamma = as.formula(paste(as.character(formula)[2], "~ dsbgamma(lmean, lrate)")),
-                 weibull = as.formula(paste(as.character(formula)[2], "~ dsbweibull(lmean, lshape)"))
-                 )
+    dep <- switch(dstrbn,
+                  lnorm = "~ dsblnorm(lmean, lsig)",
+                  gamma = "~ dsbgamma(lmean, lrate)",
+                  weibull = "~ dsbweibull(lmean, lshape)")
+    f1 <- as.formula(paste(vars[1], dep))
     f2 <- as.formula(paste("lmean ~", as.character(formula)[3]))
     model <- bbmle::mle2(f1, start=startpars, data=dat, method="L-BFGS-B",
                   lower=lwr, upper=upr, parameters=list(f2), trace=trace)
 
-    res <- list(estimate=NULL,
-                model=model,
-                pdf=dstrbn,
-                formula=formula,
-                data=dat)
-    class(res) <- "sbm"
-    res$estimate <- predict(res)
   }
+  res <- new_sbm(list(estimate=NULL,
+                      model=model,
+                      pdf=dstrbn,
+                      formula=formula,
+                      data=dat))
+  res$estimate <- predict(res, ...)
   res
 }

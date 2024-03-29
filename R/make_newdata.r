@@ -26,15 +26,15 @@ make_newdata <- function(formula, data, newdata=NULL){
     stop("Can't find all formula variables in data")
 
   data <- as.data.frame(unclass(data), stringsAsFactors=T)
-
-  if(is.null(newdata) & length(covars)>0)
-    newdata <- data %>%
-      dplyr::select(dplyr::all_of(covars)) %>%
-      lapply(function(x)
-        if(is.numeric(x)) mean(x, na.rm=T) else levels(x)) %>%
-      expand.grid()
-
-  if(!is.null(newdata)){
+  if(is.null(newdata)){
+     if(length(covars)>0)
+       newdata <- data %>%
+         dplyr::select(dplyr::all_of(covars)) %>%
+         lapply(function(x)
+           if(is.numeric(x)) mean(x, na.rm=T) else levels(x)) %>%
+         expand.grid()
+  } else{
+    newdata <- as.data.frame(newdata)
     if(!all(covars %in% names(newdata)))
       stop("Can't find all formula variables in newdata")
     for(v in covars){
