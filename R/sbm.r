@@ -17,7 +17,7 @@
 #'  \code{\link{AIC.sbm}}. The list has elements:
 #'  \itemize{
 #'   \item{"estimate"}{A dataframe of estimated averages, their standard
-#'    errors and 95% confidence limits.}
+#'    errors and 95\% confidence limits.}
 #'   \item{"data"}{A dataframe containing the data used to fit the model.}
 #'   \item{"model"}{A model object of class \code{\link[bbmle]{mle2}.}}
 #'   \item{"formula"}{The formula supplied to the function call.}
