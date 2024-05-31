@@ -33,7 +33,6 @@ fitting parametric distributions (passed to \code{\link[bbmle]{mle2}}).}
 A list of class \code{sbm} with methods \code{\link{summary.sbm}},
  \code{\link{predict.sbm}}, \code{\link{hist.sbm}}, and
  \code{\link{AIC.sbm}}. The list has elements:
- \itemize{
   \item{"estimate"}{A dataframe of estimated averages, their standard
    errors and 95\% confidence limits.}
   \item{"data"}{A dataframe containing the data used to fit the model.}
@@ -41,7 +40,6 @@ A list of class \code{sbm} with methods \code{\link{summary.sbm}},
   \item{"formula"}{The formula supplied to the function call.}
   \item{"pdf"}{Character string recording the probability density function
    used to fit the model.}
-}
 }
 \description{
 Fits a parametric or non-parametric size biased distribution model to a
@@ -68,9 +66,9 @@ Response values must be strictly positive. To fit a distribution
 
   # harmonic mean estimate for agouti
   hmod <- sbm(speed~1, agoutiData)
-  lmod <- sbm(speed~1, agoutiData, pdf="lnorm")
 
   # lognormal estimate with or without a covariates
+  lmod <- sbm(speed~1, agoutiData, pdf="lnorm")
   lmod_mass <- sbm(speed~mass, BCI_speed_data, pdf="lnorm")
   lmod_spp <- sbm(speed~species, BCI_speed_data, pdf="lnorm")
 

@@ -6,10 +6,10 @@ Authors@R: person("Marcus", "Rowcliffe",
     email = "marcus.rowcliffe@ioz.ac.uk",
     role = c("aut", "cre"))
 Description: Fitting and plotting parametric or non-parametric size-biased 
-    non-negative distributions, with optional covariates in the case of 
-    parametric.
+    non-negative distributions, with optional covariates if parametric. 
     Rowcliffe, M. et al. (2016) <doi:10.1002/rse2.17>.
 URL: https://github.com/MarcusRowcliffe/sbd
+BugReports: https://github.com/MarcusRowcliffe/sbd/issues
 License: GPL-3
 Encoding: UTF-8
 Imports:

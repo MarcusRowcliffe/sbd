@@ -35,6 +35,7 @@ Patil, G. P. 2002 Weighted distributions. Pp. 2369–2377 in A.H. El-Shaarawi,
 Useful links:
 \itemize{
   \item \url{https://github.com/MarcusRowcliffe/sbd}
+  \item Report bugs at \url{https://github.com/MarcusRowcliffe/sbd/issues}
 }
 
 }
