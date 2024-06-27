@@ -31,7 +31,7 @@ hist.sbm <- function(x, log=TRUE, add=FALSE, breaks=20, lpar=list(col="red"),
   dots <- list(...)
   allvars <- all.vars(x$formula)
   dat <- get(allvars[1], x$data)
-  if(log) dat <- log(dat)
+  if(log) dat <- log10(dat)
   h <- hist(dat, breaks=breaks, plot=FALSE)
   frq <- if("freq" %in% names(dots)) dots$freq else TRUE
 
@@ -57,7 +57,11 @@ hist.sbm <- function(x, log=TRUE, add=FALSE, breaks=20, lpar=list(col="red"),
     ppar <- c(list(x=h), dots)
     pargs <- names(ppar)
     if(!"main" %in% pargs) ppar <- c(ppar, main="")
-    if(!"xlab" %in% pargs) ppar <- c(ppar, xlab=allvars[1])
+    if(!"xlab" %in% pargs){
+      xl <- allvars[1]
+      if(log==TRUE) xl <- paste0("log10(", xl, ")")
+      ppar <- c(ppar, xlab=xl)
+    }
     if(!"ylim" %in% pargs){
       d <- if(frq) h$counts else h$density
       lim <- range(c(0, mx, d))
