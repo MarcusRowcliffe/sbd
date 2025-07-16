@@ -1,6 +1,7 @@
 export(dsblnorm)
 export(dsbgamma)
 export(dsbweibull)
+export(hist.sbm)
 export(hmean)
 export(make_newdata)
 export(sbm)
